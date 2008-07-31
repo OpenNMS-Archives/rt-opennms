@@ -61,7 +61,7 @@
 	</message>
 
 	<message name="TicketCreateRequest">
-		<part name="ticket" type="tns:TicketCore" />
+		<part name="ticket" type="tns:Ticket" />
 		<part name="request_header" type="tns:Credentials" />
 	</message>
 
