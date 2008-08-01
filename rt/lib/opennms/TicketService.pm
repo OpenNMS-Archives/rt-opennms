@@ -59,27 +59,31 @@ sub TicketGetByID() {
 	my $Self = shift->new(@_);
 	my $TicketID = shift;
 	my %Ticket;
-
+	RT::LoadConfig();
+	RT::Init();
+	my $RTUser = $RT::SystemUser;
+	my $Ticket = RT::Ticket->new( $RTUser );
+    $Ticket->Load($TicketID);
+    unless ( $Ticket->id ) {
+        Abort("Could not load ticket $TicketID");
+    	}
+	
 	# Fake RT Ticket information here
 	
-	$Ticket{TicketID} = 123456789;
-	$Ticket{Subject} = "Fake Ticket Subject";
-	$Ticket{Contents} = "Fake Ticket Contents";
-	$Ticket{Requestor} = "jonathan.sartin";
-	$Ticket{LastUpdated} = "31/07/2008";
 	
-	print STDERR "Called TicketGetByID";
+	print STDERR "Called TicketGetByID $TicketID";
 	print STDERR Dumper{$TicketID};
 	
-	my $LastUpdated = ConvertDate( $Ticket{LastUpdated} );
+	#my $LastUpdated = ConvertDate( $Ticket{LastUpdated} );
 	
 	my @TicketResponse = 
 	(
-		SOAP::Data->name("TicketID" => $Ticket{TicketID})->type("long"),
-		SOAP::Data->name("Subject" => $Ticket{Subject})->type("string"),
-		SOAP::Data->name("Contents" => $Ticket{Contents})->type("string"),
-		SOAP::Data->name("Requestor" => $Ticket{Requestor})->type("string"),
-		SOAP::Data->name("LastUpdated" => $LastUpdated)->type("dateTime"),
+		SOAP::Data->name("TicketID" => $Ticket->id())->type("long"),
+		SOAP::Data->name("Subject" => $Ticket->Subject())->type("string"),
+		SOAP::Data->name("Contents" => "")->type("string"),
+		SOAP::Data->name("Requestor" => $Ticket->Creator())->type("string"),
+		SOAP::Data->name("Status" => $Ticket->Status())->type("string"),
+		SOAP::Data->name("LastUpdated" => $Ticket->LastUpdated())->type("dateTime"),
 	);
     
     return SOAP::Data->name( "Ticket" )

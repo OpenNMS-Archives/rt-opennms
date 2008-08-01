@@ -59,15 +59,13 @@ sub new {
 	my $header = $som->header();
 	my $user=$$header{'request_header'}{'User'};
 	my $pass=$$header{'request_header'}{'Pass'};
-	# print STDERR "User $user, password $pass\n";
 	my $RequiredUser = "user";
  	my $RequiredPassword = "user";
  	my $RTUser = new RT::CurrentUser;
  	unless ($RTUser->LoadByName($user)) {die "Failed to Load RT User"};
  	my $auth = $RTUser->IsPassword($pass);
- 	# print STDERR "IsPassword said $auth";
  	
-	if ($auth ne 1) {
+ 	if ($auth ne 1) {
 		die SOAP::Fault
 			->faultcode('Server.RequestError')
 			->faultstring("Authentication Failure");
@@ -77,34 +75,6 @@ sub new {
 	# At this moment we have a soap request and have successfully authenticated the
 	# user/pass in the header element.
 
-	# Commented out OTRS-style logging, need a replacement that's better than print STDERR "blah";
-
- 	#$Self->{CommonObject}->{LogObject}->Log(
-	#	Priority => 'debug',
-	#	Message  => "user: (required) $RequiredUser - (request) $header->{request_header}->{User}",
-	#);
- 
-    #if ( !defined $RequiredUser || !length( $RequiredUser )
-    #    || !defined $RequiredPassword || !length( $RequiredPassword )
-    #) {
-    #    #$Self->{CommonObject}->{LogObject}->Log(
-    #    #    Priority => 'notice',
-    #    #    Message  => "SOAP::User or SOAP::Password is empty, SOAP access denied!",
-    #    #);
-    #    die SOAP::Fault
-    #    	->faultcode('Server.RequestError')
-    #    	->faultstring("Authentication Failure");
-    #}
-    #if ( $header->{request_header}->{User} ne $RequiredUser || $header->{request_header}->{Pass} ne $RequiredPassword ) {
-    #    #$Self->{CommonObject}->{LogObject}->Log(
-    #    #    Priority => 'notice',
-    #    #    Message  => "Auth for user $header->{request_header}->{User} failed!",
-    #    #);
-    #    die SOAP::Fault
-    #    	->faultcode('Server.RequestError')
-    #    	->faultstring("Authentication Failure");
-    #}
-    
     bless($Self, $Class);
 	
 	return $Self;
