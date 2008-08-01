@@ -30,7 +30,7 @@
 						minOccurs="0" />
 					<xsd:element name="Subject" type="xsd:string"
 						minOccurs="0" />
-					<xsd:element name="Contents" type="xsd:int"
+					<xsd:element name="Contents" type="xsd:string"
 						minOccurs="0" />
 					<xsd:element name="Requestor" type="xsd:string"
 						minOccurs="0" />
