@@ -15,7 +15,11 @@ Which file comes where
 Configuration
 
 WSDL - needs to contain the URL (see above) to your opennms.pl
-
+	<service name="TicketService">
+		<port name="TicketServicePort" binding="tns:TicketServiceSoapBinding">
+			<soap:address location="http://localhost/cgi-bin/opennms.pl" />
+		</port>
+	</service>
 
 
 User Creation in RT
