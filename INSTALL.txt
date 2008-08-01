@@ -1,0 +1,29 @@
+Installation instructions
+
+
+Dependencies
+
+RT Library Paths - need to be updated in all files
+
+Acces to RTSiteConfig.pm, RTConfig.pm
+
+The user who is executing the CGI needs to be able to read those (typically www-data).
+
+
+Which file comes where
+
+Configuration
+
+WSDL - needs to contain the URL (see above) to your opennms.pl
+
+
+
+User Creation in RT
+
+Create a user for OpenNMS which has the rights to create and comment in the Queues you want to.
+
+
+Testing
+
+
+
