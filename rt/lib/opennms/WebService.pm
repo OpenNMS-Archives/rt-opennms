@@ -8,6 +8,7 @@
 # OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
 #
 # Copyright (C) Jonathan Sartin (Jonathan@opennms.org)
+# Copyright (C) for the RT Parts Alexander Finger (af@opennms.org)
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -58,16 +59,23 @@ sub new {
 	my $header = $som->header();
 	my $user=$$header{'request_header'}{'User'};
 	my $pass=$$header{'request_header'}{'Pass'};
-	print STDERR "User $user, password $pass\n";
+	# print STDERR "User $user, password $pass\n";
 	my $RequiredUser = "user";
  	my $RequiredPassword = "user";
  	my $RTUser = new RT::CurrentUser;
  	unless ($RTUser->LoadByName($user)) {die "Failed to Load RT User"};
  	my $auth = $RTUser->IsPassword($pass);
- 	print STDERR "IsPassword said $auth";
-	# Now we want to authenticate with this user and password against RT to see if 
-	# we can actually open Tickets.
-	
+ 	# print STDERR "IsPassword said $auth";
+ 	
+	if ($auth ne 1) {
+		die SOAP::Fault
+			->faultcode('Server.RequestError')
+			->faultstring("Authentication Failure");
+		
+	}	
+
+	# At this moment we have a soap request and have successfully authenticated the
+	# user/pass in the header element.
 
 	# Commented out OTRS-style logging, need a replacement that's better than print STDERR "blah";
 
