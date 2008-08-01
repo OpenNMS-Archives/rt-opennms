@@ -1,4 +1,4 @@
-#!/opt/local/bin/perl -w
+#!/usr/bin/perl -w
 # --
 # bin/cgi-bin/opennms.pl - Dispatcher script for OpenNMS Integration module
 # Copyright (C) (Jonathan Sartin) (Jonathan@opennms.org)
@@ -15,9 +15,11 @@ use warnings;
 
 # use ../../ as lib location
 # This is OTRS specific and will need changing.
-use FindBin qw($Bin);
-use lib "$Bin/../..";
-use lib "$Bin/../../Kernel/cpan-lib";
+#use FindBin qw($Bin);
+#use lib "$Bin/../..";
+#use lib "$Bin/../../Kernel/cpan-lib";
+use lib ("/usr/local/share/request-tracker3.6/lib","/usr/share/request-tracker3.6/lib","/etc/request-tracker-3.6");
+
  
 use SOAP::Transport::HTTP;
 
