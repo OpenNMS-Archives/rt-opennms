@@ -1,4 +1,4 @@
-package org.opennms.integration.rt.ticketclient;
+package src.test.java.org.opennms.integration.rt.ticketclient;
 
 import java.rmi.RemoteException;
 
@@ -84,7 +84,7 @@ public class TicketClientTest extends TestCase {
 		
 		newTicket.setSubject("test create subject");
 		newTicket.setContents("test create contents");
-		newTicket.setStatus("open");
+		newTicket.setStatus("new");
 		newTicket.setRequestor("Alex");
 		
 		try {
