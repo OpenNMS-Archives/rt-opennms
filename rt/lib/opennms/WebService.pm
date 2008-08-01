@@ -32,7 +32,7 @@
 
 
 package opennms::WebService;
-
+use Data::Dumper;
 use strict;
 use warnings;
 
@@ -50,8 +50,11 @@ sub new {
 	my $Self = {};
 	my $som = pop();
 	
-	
+	# don't change this hash dereferencing or you will burn in hell
 	my $header = $som->header();
+	my $user=$$header{'request_header'}{'User'};
+	my $pass=$$header{'request_header'}{'Pass'};
+	print STDERR "User $user, password $pass\n";
 	my $RequiredUser = "user";
  	my $RequiredPassword = "user";
 
