@@ -29,7 +29,7 @@
 # http://www.opennms.com/
 
 package opennms::TicketService;
-
+use lib ("/usr/local/share/request-tracker3.6/lib","/usr/share/request-tracker3.6/lib","/etc/request-tracker-3.6");
 @ISA = ("opennms::WebService");
 
 use strict;
@@ -40,7 +40,7 @@ use SOAP::DateTime;
 use Data::Dumper;
 use integer;
 use constant URI => "http://opennms.org/integration/rt/TicketService";
-
+use RT;
 
 sub new {
  
@@ -66,7 +66,7 @@ sub TicketGetByID() {
 	$Ticket{Subject} = "Fake Ticket Subject";
 	$Ticket{Contents} = "Fake Ticket Contents";
 	$Ticket{Requestor} = "jonathan.sartin";
-	$Ticket{LastUpdated} = "31/07/2008"
+	$Ticket{LastUpdated} = "31/07/2008";
 	
 	print STDERR "Called TicketGetByID";
 	print STDERR Dumper{$TicketID};
@@ -79,7 +79,7 @@ sub TicketGetByID() {
 		SOAP::Data->name("Subject" => $Ticket{Subject})->type("string"),
 		SOAP::Data->name("Contents" => $Ticket{Contents})->type("string"),
 		SOAP::Data->name("Requestor" => $Ticket{Requestor})->type("string"),
-		SOAP::Data->name("LastUpdated" => $LastUpdated)->type(""dateTime""),
+		SOAP::Data->name("LastUpdated" => $LastUpdated)->type("dateTime"),
 	);
     
     return SOAP::Data->name( "Ticket" )
@@ -92,24 +92,44 @@ sub TicketGetByID() {
 sub TicketCreate() {
 	
 	my $Self = shift->new(@_);
+	
+	
 	my $TicketReq = shift;
 	my $UserID = shift;
 	
-	my $TicketID = 123456789;
-	
 	print STDERR "Called TicketCreate";
-	print STDERR Dumper{$TicketID};
-	
 	# Your fields should be available in
 	# $TicketReq->{TicketID} (but not used)
-	# $TicketReq->{Subject}
-	# $TicketReq->{Contents}
-	# $TicketReq->{Requestor}
+	my $Subject=$TicketReq->{Subject};
+	my $Content=$TicketReq->{Contents};
+	my $Requestor=$TicketReq->{Requestor};
 	# $TicketReq->{LastUpdated}
 	
+	# Do the RT Stuff
+	RT::LoadConfig();
+	RT::Init();
+	my $RTUser = $RT::SystemUser;
+	
+	# Encode the Content Part for the Ticket
+	my $ticket_content = MIME::Entity->build(	Data => $Content,
+						 Type => 'text/plain');
+	
+	my $ticket = new RT::Ticket($RTUser);
+	my $queue = 'opennms';
+	my %ticketValues = (	
+				Queue 		=> $queue,
+				Subject		=> $Subject,
+				#'CustomField-1' => $data{'$whatyouwanthere'},				
+				Requestor	=> $Requestor,
+				MIMEObj		=> $ticket_content
+				);
+	my ($TicketId, $transaction, $err) = $ticket->Create(%ticketValues);
+	unless ($TicketId && $transaction) {die("Ticket Creation failed")}
+		
+	print STDERR "$Subject - $Content - $Requestor - $TicketId\n";
 	# I think we can prolly avoid the fancy formatting in this one
 	
-	return $TicketID;
+	return $TicketId;
 	
 }
 1;
