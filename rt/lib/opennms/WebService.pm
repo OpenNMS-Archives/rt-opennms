@@ -29,12 +29,16 @@
 # http://www.opennms.com/
 
 # opennms/WebService.pm - Super Class for Ticket interface for OpenNMS Integration
-
+use lib ("/usr/local/share/request-tracker3.6/lib","/usr/share/request-tracker3.6/lib","/etc/request-tracker-3.6");
 
 package opennms::WebService;
 use Data::Dumper;
 use strict;
 use warnings;
+use RT;
+use RT::CurrentUser;
+RT::LoadConfig();
+RT::Init();
 
 use SOAP::Lite;
 
@@ -57,6 +61,13 @@ sub new {
 	print STDERR "User $user, password $pass\n";
 	my $RequiredUser = "user";
  	my $RequiredPassword = "user";
+ 	my $RTUser = new RT::CurrentUser;
+ 	unless ($RTUser->LoadByName($user)) {die "Failed to Load RT User"};
+ 	my $auth = $RTUser->IsPassword($pass);
+ 	print STDERR "IsPassword said $auth";
+	# Now we want to authenticate with this user and password against RT to see if 
+	# we can actually open Tickets.
+	
 
 	# Commented out OTRS-style logging, need a replacement that's better than print STDERR "blah";
 
@@ -65,26 +76,26 @@ sub new {
 	#	Message  => "user: (required) $RequiredUser - (request) $header->{request_header}->{User}",
 	#);
  
-    if ( !defined $RequiredUser || !length( $RequiredUser )
-        || !defined $RequiredPassword || !length( $RequiredPassword )
-    ) {
-        #$Self->{CommonObject}->{LogObject}->Log(
-        #    Priority => 'notice',
-        #    Message  => "SOAP::User or SOAP::Password is empty, SOAP access denied!",
-        #);
-        die SOAP::Fault
-        	->faultcode('Server.RequestError')
-        	->faultstring("Authentication Failure");
-    }
-    if ( $header->{request_header}->{User} ne $RequiredUser || $header->{request_header}->{Pass} ne $RequiredPassword ) {
-        #$Self->{CommonObject}->{LogObject}->Log(
-        #    Priority => 'notice',
-        #    Message  => "Auth for user $header->{request_header}->{User} failed!",
-        #);
-        die SOAP::Fault
-        	->faultcode('Server.RequestError')
-        	->faultstring("Authentication Failure");
-    }
+    #if ( !defined $RequiredUser || !length( $RequiredUser )
+    #    || !defined $RequiredPassword || !length( $RequiredPassword )
+    #) {
+    #    #$Self->{CommonObject}->{LogObject}->Log(
+    #    #    Priority => 'notice',
+    #    #    Message  => "SOAP::User or SOAP::Password is empty, SOAP access denied!",
+    #    #);
+    #    die SOAP::Fault
+    #    	->faultcode('Server.RequestError')
+    #    	->faultstring("Authentication Failure");
+    #}
+    #if ( $header->{request_header}->{User} ne $RequiredUser || $header->{request_header}->{Pass} ne $RequiredPassword ) {
+    #    #$Self->{CommonObject}->{LogObject}->Log(
+    #    #    Priority => 'notice',
+    #    #    Message  => "Auth for user $header->{request_header}->{User} failed!",
+    #    #);
+    #    die SOAP::Fault
+    #    	->faultcode('Server.RequestError')
+    #    	->faultstring("Authentication Failure");
+    #}
     
     bless($Self, $Class);
 	
