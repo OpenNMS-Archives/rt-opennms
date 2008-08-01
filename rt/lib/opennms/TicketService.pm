@@ -74,7 +74,7 @@ sub TicketGetByID() {
 	print STDERR "Called TicketGetByID $TicketID";
 	print STDERR Dumper{$TicketID};
 	
-	#my $LastUpdated = ConvertDate( $Ticket{LastUpdated} );
+	my $LastUpdated = ConvertDate( $Ticket->LastUpdated() );
 	
 	my @TicketResponse = 
 	(
@@ -83,7 +83,7 @@ sub TicketGetByID() {
 		SOAP::Data->name("Contents" => "")->type("string"),
 		SOAP::Data->name("Requestor" => $Ticket->Creator())->type("string"),
 		SOAP::Data->name("Status" => $Ticket->Status())->type("string"),
-		SOAP::Data->name("LastUpdated" => $Ticket->LastUpdated())->type("dateTime"),
+		SOAP::Data->name("LastUpdated" => $LastUpdated)->type("dateTime"),
 	);
     
     return SOAP::Data->name( "Ticket" )
@@ -132,8 +132,11 @@ sub TicketCreate() {
 		
 	print STDERR "$Subject - $Content - $Requestor - $TicketId\n";
 	# I think we can prolly avoid the fancy formatting in this one
-	
-	return $TicketId;
+	my $this_id = SOAP::Data->name("TicketID" => $TicketId)->type("long");
+	 return SOAP::Data->name( "TicketID" )
+			->attr( {"xmlns:tns" => URI } )
+			->type( "long" )
+			->value($TicketId );
 	
 }
 1;
