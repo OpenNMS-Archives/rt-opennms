@@ -88,37 +88,37 @@
 			transport="http://schemas.xmlsoap.org/soap/http" />
 		<operation name="TicketGetByID">
 			<soap:operation
-				soapAction="http://opennms.org/integration/otrs/ticketservice#TicketGetByID" />
+				soapAction="http://opennms.org/integration/rt/ticketservice#TicketGetByID" />
 			<input>
 				<soap:body use="encoded"
-					namespace="http://opennms.org/integration/otrs/ticketservice"
+					namespace="http://opennms.org/integration/rt/ticketservice"
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
 				<soap:header use="encoded" part="request_header"
 					message="tns:TicketGetByIDRequest"
-					namespace="http://opennms.org/integration/otrs/ticketservice"
+					namespace="http://opennms.org/integration/rt/ticketservice"
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
 			</input>
 			<output>
 				<soap:body use="encoded"
-					namespace="http://opennms.org/integration/otrs/ticketservice"
+					namespace="http://opennms.org/integration/rt/ticketservice"
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
 			</output>
 		</operation>
 		<operation name="TicketCreate">
 			<soap:operation
-				soapAction="http://opennms.org/integration/otrs/ticketservice#TicketCreate" />
+				soapAction="http://opennms.org/integration/rt/ticketservice#TicketCreate" />
 			<input>
 				<soap:body use="encoded"
-					namespace="http://opennms.org/integration/otrs/ticketservice"
+					namespace="http://opennms.org/integration/rt/ticketservice"
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
 				<soap:header use="encoded" part="request_header"
 					message="tns:TicketCreateRequest"
-					namespace="http://opennms.org/integration/otrs/ticketservice"
+					namespace="http://opennms.org/integration/rt/ticketservice"
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
 			</input>
 			<output>
 				<soap:body use="encoded"
-					namespace="http://opennms.org/integration/otrs/ticketservice"
+					namespace="http://opennms.org/integration/rt/ticketservice"
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
 			</output>
 		</operation>
