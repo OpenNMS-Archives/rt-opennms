@@ -16,12 +16,23 @@
 			xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 			<xsd:import
 				namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+				
 			<xsd:complexType name="TicketID">
 				<xsd:all>
 					<xsd:element name="TicketID" type="xsd:long"
 						minOccurs="1" />
 				</xsd:all>
 			</xsd:complexType>
+			
+			<xsd:complexType name="TicketStatusUpdate">
+				<xsd:all>
+					<xsd:element name="TicketID" type="xsd:long"
+						minOccurs="1" />
+					<xsd:element name="Status" type="xsd:string"
+						minOccurs="1" />
+				</xsd:all>
+			</xsd:complexType>
+			
 			<xsd:complexType name="Ticket">
 				<xsd:all>
 					<xsd:element name="TicketID" type="xsd:long"
@@ -69,6 +80,11 @@
 		<part name="ticketID" type="xsd:long" />
 	</message>
 	
+	<message name="TicketStatusUpdateRequest">
+		<part name="ticketStatusUpdate" type="tns:TicketStatusUpdate" />
+		<part name="request_header" type="tns:Credentials" />
+	</message>
+	
 	<portType name="TicketServicePort">
 
 		<operation name="TicketGetByID">
@@ -79,6 +95,10 @@
 		<operation name="TicketCreate">
 			<input message="tns:TicketCreateRequest" />
 			<output message="tns:TicketCreateResponse" />
+		</operation>
+		
+		<operation name="TicketStatusUpdate">
+			<input message="tns:TicketStatusUpdateRequest" />
 		</operation>
 		
 	</portType>
@@ -121,6 +141,19 @@
 					namespace="http://opennms.org/integration/rt/ticketservice"
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
 			</output>
+		</operation>
+		<operation name="TicketStatusUpdate">
+			<soap:operation
+				soapAction="http://opennms.org/integration/rt/ticketservice#TicketStatusUpdate" />
+			<input>
+				<soap:body use="encoded"
+					namespace="http://opennms.org/integration/rt/ticketservice"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+				<soap:header use="encoded" part="request_header"
+					message="tns:TicketStatusUpdateRequest"
+					namespace="http://opennms.org/integration/rt/ticketservice"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</input>
 		</operation>
 	</binding>
 
